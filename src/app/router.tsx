@@ -16,6 +16,7 @@ const DebtsPage = lazy(() => import('@/features/debts/DebtsPage'));
 const ContactsPage = lazy(() => import('@/features/contacts/ContactsPage'));
 const PayrollPage = lazy(() => import('@/features/payroll/PayrollPage'));
 const ReportsPage = lazy(() => import('@/features/reports/ReportsPage'));
+const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
 const MorePage = lazy(() => import('./layout/MorePage'));
 
 function RequireAuth() {
@@ -52,6 +53,7 @@ export const router = createBrowserRouter([
           { path: 'contactos', element: <ContactsPage /> },
           { path: 'nomina', element: <PayrollPage /> },
           { path: 'reportes', element: <ReportsPage /> },
+          { path: 'ajustes', element: <SettingsPage /> },
           { path: 'mas', element: <MorePage /> },
           { path: '*', element: <NotFoundPage /> },
         ],
