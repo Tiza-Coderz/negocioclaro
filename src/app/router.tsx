@@ -9,6 +9,7 @@ import { BusinessProvider } from './providers/BusinessProvider';
 
 // Cada pantalla es un chunk aparte: el móvil solo descarga lo que abre.
 const DashboardPage = lazy(() => import('@/features/dashboard/DashboardPage'));
+const RatesPage = lazy(() => import('@/features/rates/RatesPage'));
 const MorePage = lazy(() => import('./layout/MorePage'));
 
 function RequireAuth() {
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           { index: true, element: <DashboardPage /> },
+          { path: 'tasas', element: <RatesPage /> },
           { path: 'mas', element: <MorePage /> },
           { path: '*', element: <NotFoundPage /> },
         ],
