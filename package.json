@@ -18,7 +18,11 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:start": "supabase start -x studio,logflare,vector,realtime,imgproxy,edge-runtime,mailpit,supavisor",
+    "db:reset": "supabase db reset",
+    "db:test": "node scripts/gen-sql-tests.mjs && supabase test db",
+    "db:types": "supabase gen types typescript > src/data/database.types.ts"
   },
   "repository": {
     "type": "git",
@@ -51,6 +55,7 @@
     "jsdom": "^31.0.1",
     "prettier": "^3.10.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "supabase": "^3.1.0",
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.72.2",
