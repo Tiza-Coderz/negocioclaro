@@ -43,3 +43,29 @@ jobs:
           VITE_SUPABASE_URL: https://example.supabase.co
           VITE_SUPABASE_ANON_KEY: ci-placeholder
           VITE_DEMO_MODE: 'true'
+
+  db:
+    name: Base de datos (migraciones y tests SQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Los tests SQL están al día con el fixture compartido
+        run: |
+          node scripts/gen-sql-tests.mjs
+          git diff --exit-code supabase/tests
+
+      - name: Levantar Postgres y aplicar migraciones
+        run: supabase db start
+
+      - name: Tests pgTAP (mismos casos que Vitest)
+        run: supabase test db
