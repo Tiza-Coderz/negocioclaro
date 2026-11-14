@@ -12,6 +12,8 @@ const DashboardPage = lazy(() => import('@/features/dashboard/DashboardPage'));
 const MovementsPage = lazy(() => import('@/features/movements/MovementsPage'));
 const QuickEntryPage = lazy(() => import('@/features/quick-entry/QuickEntryPage'));
 const RatesPage = lazy(() => import('@/features/rates/RatesPage'));
+const DebtsPage = lazy(() => import('@/features/debts/DebtsPage'));
+const ContactsPage = lazy(() => import('@/features/contacts/ContactsPage'));
 const MorePage = lazy(() => import('./layout/MorePage'));
 
 function RequireAuth() {
@@ -44,6 +46,8 @@ export const router = createBrowserRouter([
           { path: 'movimientos', element: <MovementsPage /> },
           { path: 'registro-rapido', element: <QuickEntryPage /> },
           { path: 'tasas', element: <RatesPage /> },
+          { path: 'cuentas', element: <DebtsPage /> },
+          { path: 'contactos', element: <ContactsPage /> },
           { path: 'mas', element: <MorePage /> },
           { path: '*', element: <NotFoundPage /> },
         ],
