@@ -308,6 +308,12 @@ isOneToOne: false
 "is_owner":
 { Args: { "p_business": string }; Returns: boolean
                            },
+"pay_payroll":
+{ Args: { "p_paid_on": string,"p_run": string }; Returns: undefined
+                           },
+"prepare_payroll":
+{ Args: { "p_business": string,"p_period": string }; Returns: string
+                           },
 "rate_on":
 { Args: { "p_business": string,"p_currency": Database["public"]['Enums']["currency"],"p_date": string }; Returns: {
               "cup_per_unit": number,"rate_date": string
@@ -318,6 +324,9 @@ isOneToOne: false
                            },
 "reconsolidate_movements":
 { Args: { "p_business": string,"p_currency": Database["public"]['Enums']["currency"],"p_from": string }; Returns: number
+                           },
+"reopen_payroll":
+{ Args: { "p_run": string }; Returns: undefined
                            },
 "reset_demo":
 { Args: Record<PropertyKey, never>; Returns: undefined
