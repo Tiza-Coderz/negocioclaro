@@ -1,0 +1,89 @@
+{
+  "$comment": "Casos compartidos entre los tests de TypeScript (Vitest) y de SQL (pgTAP). Montos en centavos.",
+  "rates": [
+    { "date": "2026-05-01", "currency": "USD", "cupPerUnit": "360" },
+    { "date": "2026-05-15", "currency": "USD", "cupPerUnit": "365.5" },
+    { "date": "2026-06-01", "currency": "USD", "cupPerUnit": "370" },
+    { "date": "2026-05-01", "currency": "EUR", "cupPerUnit": "395.25" },
+    { "date": "2026-05-10", "currency": "MLC", "cupPerUnit": "250" }
+  ],
+  "cases": [
+    {
+      "name": "USD con tasa del mismo día",
+      "input": { "date": "2026-05-01", "kind": "ingreso", "amountCents": 10000, "currency": "USD" },
+      "expected": {
+        "amountUsdCents": 10000,
+        "amountCupCents": 3600000,
+        "rateDate": "2026-05-01",
+        "rateCupUsd": 360,
+        "missingRate": false
+      }
+    },
+    {
+      "name": "CUP usa la última tasa USD anterior (05-15) y redondea",
+      "input": { "date": "2026-05-20", "kind": "gasto", "amountCents": 100000, "currency": "CUP" },
+      "expected": {
+        "amountUsdCents": 274,
+        "amountCupCents": 100000,
+        "rateDate": "2026-05-15",
+        "rateCupUsd": 365.5,
+        "missingRate": false
+      }
+    },
+    {
+      "name": "EUR se convierte vía CUP a USD con un único redondeo",
+      "input": { "date": "2026-05-20", "kind": "ingreso", "amountCents": 5000, "currency": "EUR" },
+      "expected": {
+        "amountUsdCents": 5407,
+        "amountCupCents": 1976250,
+        "rateDate": "2026-05-15",
+        "rateCupUsd": 365.5,
+        "missingRate": false
+      }
+    },
+    {
+      "name": "MLC sin tasa previa queda marcado como sin tasa",
+      "input": { "date": "2026-05-05", "kind": "gasto", "amountCents": 1000, "currency": "MLC" },
+      "expected": {
+        "amountUsdCents": null,
+        "amountCupCents": null,
+        "rateDate": null,
+        "rateCupUsd": null,
+        "missingRate": true
+      }
+    },
+    {
+      "name": "CUP antes de cualquier tasa USD queda sin tasa",
+      "input": { "date": "2026-04-30", "kind": "ingreso", "amountCents": 500, "currency": "CUP" },
+      "expected": {
+        "amountUsdCents": null,
+        "amountCupCents": null,
+        "rateDate": null,
+        "rateCupUsd": null,
+        "missingRate": true
+      }
+    },
+    {
+      "name": "Medio centavo exacto redondea hacia arriba (0.5 → 1)",
+      "input": { "date": "2026-05-02", "kind": "ingreso", "amountCents": 180, "currency": "CUP" },
+      "expected": {
+        "amountUsdCents": 1,
+        "amountCupCents": 180,
+        "rateDate": "2026-05-01",
+        "rateCupUsd": 360,
+        "missingRate": false
+      }
+    },
+    {
+      "name": "MLC con tasa propia y USD de otra fecha",
+      "input": { "date": "2026-06-30", "kind": "gasto", "amountCents": 12345, "currency": "MLC" },
+      "expected": {
+        "amountUsdCents": 8341,
+        "amountCupCents": 3086250,
+        "rateDate": "2026-06-01",
+        "rateCupUsd": 370,
+        "missingRate": false
+      }
+    }
+  ]
+}
