@@ -53,7 +53,7 @@ const data: ReportMovement[] = [
 ];
 
 describe('buildMonthlyReport', () => {
-  const r = buildMonthlyReport(data, '2026-11', 'USD');
+  const r = buildMonthlyReport(data, '2026-11', 'USD', '2026-12-01');
 
   it('totales del mes y comparación con el anterior', () => {
     expect(r.totals.income).toBe(200_00);
@@ -79,6 +79,14 @@ describe('buildMonthlyReport', () => {
 
   it('top clientes del mes', () => {
     expect(r.topClients[0]?.name).toBe('Paladar La Habanera');
+  });
+});
+
+describe('buildMonthlyReport en el mes en curso', () => {
+  it('compara contra los mismos días del mes anterior', () => {
+    const r = buildMonthlyReport(data, '2026-11', 'USD', '2026-11-05');
+    expect(r.previousUptoDay).toBe(5);
+    expect(r.previous.income).toBe(0); // el ingreso de octubre es del día 10
   });
 });
 

@@ -35,8 +35,8 @@ export default function ReportsPage() {
     return (data ?? []).filter((m) => m.date >= from && m.date <= to);
   }, [data, month]);
   const report = useMemo(
-    () => buildMonthlyReport(data ?? [], month, currency),
-    [data, month, currency],
+    () => buildMonthlyReport(data ?? [], month, currency, today),
+    [data, month, currency, today],
   );
   const filenameBase = business.name;
 

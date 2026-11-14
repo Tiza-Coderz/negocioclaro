@@ -11,6 +11,7 @@ import {
   type ReportCurrency,
 } from './currency';
 import {
+  comparablePrevious,
   expensesByCategory,
   groupByMonth,
   netMargin,
@@ -20,7 +21,7 @@ import {
   type DashboardMovement,
   type TopClient,
 } from './dashboard';
-import { addMonths, type IsoDate, type YearMonth } from './dates';
+import { type IsoDate, type YearMonth } from './dates';
 import { fromCents, type Cents } from './money';
 
 export interface ReportMovement extends DashboardMovement {
@@ -37,6 +38,8 @@ export interface MonthlyReport {
   currency: ReportCurrency;
   totals: Totals;
   previous: Totals;
+  /** Si el mes está en curso, se compara solo hasta este día del mes anterior. */
+  previousUptoDay: number | null;
   netChangePct: number | null;
   marginPct: number | null;
   byCategoryExpense: CategorySlice[];
@@ -50,12 +53,13 @@ export function buildMonthlyReport(
   movements: readonly ReportMovement[],
   month: YearMonth,
   currency: ReportCurrency,
+  today: IsoDate,
 ): MonthlyReport {
   const grouped = groupByMonth(movements);
   const current = grouped.get(month) ?? [];
-  const prev = grouped.get(addMonths(month, -1)) ?? [];
   const t = totals(current, currency);
-  const p = totals(prev, currency);
+  const prev = comparablePrevious(movements, month, today, currency);
+  const p = prev.totals;
 
   const methods = new Map<PaymentMethod, { income: Cents; expense: Cents }>();
   const original = new Map<Currency, { income: Cents; expense: Cents }>();
@@ -83,6 +87,7 @@ export function buildMonthlyReport(
     currency,
     totals: t,
     previous: p,
+    previousUptoDay: prev.uptoDay,
     netChangePct: percentChange(t.net, p.net),
     marginPct: netMargin(t),
     byCategoryExpense: expensesByCategory(current, currency, 20),
