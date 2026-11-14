@@ -313,6 +313,9 @@ isOneToOne: false
               "cup_per_unit": number,"rate_date": string
             }[]
                            },
+"recalc_debt_paid":
+{ Args: { "p_debt": string }; Returns: undefined
+                           },
 "reconsolidate_movements":
 { Args: { "p_business": string,"p_currency": Database["public"]['Enums']["currency"],"p_from": string }; Returns: number
                            },
