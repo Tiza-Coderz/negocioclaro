@@ -75,7 +75,7 @@ export function renderMonthlyReportPdf(input: {
   const change =
     r.netChangePct === null
       ? 'Sin datos del mes anterior para comparar.'
-      : `La ganancia neta ${r.netChangePct >= 0 ? 'subió' : 'bajó'} ${pdfText(formatNumber(Math.abs(r.netChangePct), 1, 0))} % respecto al mes anterior (${money(r.previous.net)}).`;
+      : `La ganancia neta ${r.netChangePct >= 0 ? 'subió' : 'bajó'} ${pdfText(formatNumber(Math.abs(r.netChangePct), 1, 0))} % respecto ${r.previousUptoDay ? `al 1–${r.previousUptoDay} del mes anterior` : 'al mes anterior'} (${money(r.previous.net)}).`;
   doc.text(change, M, y);
   y += 5;
   doc.text(pdfText(input.rateNote), M, y);
@@ -90,7 +90,14 @@ export function renderMonthlyReportPdf(input: {
   }
   y += 6;
 
+  const pageH = doc.internal.pageSize.getHeight();
+  const align = (i: number) => (i === 0 ? 'left' : 'right') as 'left' | 'right';
   const table = (title: string, head: string[], body: string[][], foot?: string[]) => {
+    // Evita dejar el título y la cabecera huérfanos al pie de la página.
+    if (y > pageH - 45) {
+      doc.addPage();
+      y = 16;
+    }
     autoTable(doc, {
       startY: y,
       head: [
@@ -107,10 +114,12 @@ export function renderMonthlyReportPdf(input: {
             },
           },
         ],
-        head,
+        head.map((content, i) => ({ content, styles: { halign: align(i) } })),
       ],
       body,
-      ...(foot ? { foot: [foot] } : {}),
+      ...(foot
+        ? { foot: [foot.map((content, i) => ({ content, styles: { halign: align(i) } }))] }
+        : {}),
       margin: { left: M, right: M },
       styles: { fontSize: 9, cellPadding: 2 },
       headStyles: { fillColor: [241, 245, 249], textColor: [15, 23, 42] },
