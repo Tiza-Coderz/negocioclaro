@@ -22,7 +22,8 @@
     "db:start": "supabase start -x studio,logflare,vector,realtime,imgproxy,edge-runtime,mailpit,supavisor",
     "db:reset": "supabase db reset",
     "db:test": "node scripts/gen-sql-tests.mjs && supabase test db",
-    "db:types": "supabase gen types typescript > src/data/database.types.ts"
+    "db:types": "supabase gen types typescript > src/data/database.types.ts",
+    "seed": "node --env-file=.env.local scripts/seed.ts"
   },
   "repository": {
     "type": "git",

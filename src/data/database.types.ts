@@ -299,6 +299,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"ensure_demo_business":
+{ Args: { "p_user": string }; Returns: string
+                           },
 "is_member":
 { Args: { "p_business": string }; Returns: boolean
                            },
@@ -312,6 +315,12 @@ isOneToOne: false
                            },
 "reconsolidate_movements":
 { Args: { "p_business": string,"p_currency": Database["public"]['Enums']["currency"],"p_from": string }; Returns: number
+                           },
+"reset_demo":
+{ Args: Record<PropertyKey, never>; Returns: undefined
+                           },
+"seed_demo":
+{ Args: { "p_business": string,"p_seed"?: number }; Returns: undefined
                            }
           }
           Enums: {
