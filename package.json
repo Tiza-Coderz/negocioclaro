@@ -24,7 +24,8 @@
     "db:test": "node scripts/gen-sql-tests.mjs && supabase test db",
     "db:types": "supabase gen types typescript > src/data/database.types.ts",
     "seed": "node --env-file=.env.local scripts/seed.ts",
-    "icons": "powershell -ExecutionPolicy Bypass -File scripts/make-icons.ps1"
+    "icons": "powershell -ExecutionPolicy Bypass -File scripts/make-icons.ps1",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "repository": {
     "type": "git",

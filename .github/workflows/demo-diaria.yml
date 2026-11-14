@@ -1,0 +1,31 @@
+name: Demo diaria
+
+# Restablece la demo cada madrugada (hora de La Habana): los 6 meses de datos
+# vuelven a terminar "hoy" y el proyecto gratuito de Supabase no se pausa por
+# inactividad. Requiere los secrets SUPABASE_URL y SUPABASE_ANON_KEY.
+on:
+  schedule:
+    - cron: '0 9 * * *' # 04:00 en La Habana (UTC-5)
+  workflow_dispatch:
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Restablecer datos demo
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Sin secrets configurados: no hay demo desplegada todavía."
+            exit 0
+          fi
+          status=$(curl -s -o /tmp/resp.txt -w '%{http_code}' -X POST \
+            "$SUPABASE_URL/rest/v1/rpc/reset_demo" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" -d '{}')
+          echo "HTTP $status"; cat /tmp/resp.txt
+          [ "$status" = "204" ] || [ "$status" = "200" ]
